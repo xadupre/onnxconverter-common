@@ -1,13 +1,12 @@
-# -------------------------------------------------------------------------
 # Copyright (c) Microsoft Corporation. All rights reserved.
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
-# --------------------------------------------------------------------------
+###############################################################################
 
-import numbers, six
+import numbers
 import numpy as np
 import warnings
-from distutils.version import LooseVersion, StrictVersion
+from distutils.version import LooseVersion
 
 
 def sparkml_installed():
@@ -15,37 +14,40 @@ def sparkml_installed():
     Checks that *spark* is available.
     """
     try:
-        import pyspark
+        import pyspark  # noqa F401
         return True
     except ImportError:
         return False
+
 
 def sklearn_installed():
     """
     Checks that *scikit-learn* is available.
     """
     try:
-        import sklearn
+        import sklearn  # noqa F401
         return True
     except ImportError:
         return False
+
 
 def skl2onnx_installed():
     """
     Checks that *skl2onnx* converter is available.
     """
     try:
-        import skl2onnx
+        import skl2onnx  # noqa F401
         return True
     except ImportError:
         return False
+
 
 def coreml_installed():
     """
     Checks that *coremltools* is available.
     """
     try:
-        import coremltools
+        import coremltools  # noqa F401
         return True
     except ImportError:
         return False
@@ -56,7 +58,7 @@ def keras2onnx_installed():
     Checks that *keras2onnx* is available.
     """
     try:
-        import keras2onnx
+        import keras2onnx  # noqa F401
         return True
     except ImportError:
         return False
@@ -67,7 +69,7 @@ def torch_installed():
     Checks that *pytorch* is available.
     """
     try:
-        import torch
+        import torch  # noqa F401
         return True
     except ImportError:
         return False
@@ -78,7 +80,7 @@ def caffe2_installed():
     Checks that *caffe* is available.
     """
     try:
-        import caffe2
+        import caffe2  # noqa F401
         return True
     except ImportError:
         return False
@@ -89,8 +91,8 @@ def libsvm_installed():
     Checks that *libsvm* is available.
     """
     try:
-        import svm
-        import svmutil
+        import svm  # noqa F401
+        import svmutil  # noqa F401
         return True
     except ImportError:
         return False
@@ -101,18 +103,7 @@ def lightgbm_installed():
     Checks that *lightgbm* is available.
     """
     try:
-        import lightgbm
-        return True
-    except ImportError:
-        return False
-
-
-def libsvm_installed():
-    """
-    Checks that *libsvm* is available.
-    """
-    try:
-        import svmutil
+        import lightgbm  # noqa F401
         return True
     except ImportError:
         return False
@@ -123,7 +114,7 @@ def xgboost_installed():
     Checks that *xgboost* is available.
     """
     try:
-        import xgboost
+        import xgboost  # noqa F401
     except ImportError:
         return False
     from xgboost.core import _LIB
@@ -139,6 +130,29 @@ def xgboost_installed():
     if vers < allowed:
         warnings.warn('The converter works for xgboost >= 0.7. Earlier versions might not.')
     return True
+
+
+def h2o_installed():
+    """
+    Checks that *h2o* is available.
+    """
+    try:
+        import h2o  # noqa F401
+    except ImportError:
+        return False
+    return True
+
+
+def hummingbird_installed():
+    """
+    Checks that *Hummingbird* is available.
+    """
+    try:
+        import hummingbird.ml  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
 
 
 def get_producer():
@@ -174,10 +188,7 @@ def get_model_version():
 
 
 def is_numeric_type(item):
-    if six.PY2:
-        numeric_types = (int, float, long, complex)
-    else:
-        numeric_types = (int, float, complex)
+    numeric_types = (int, float, complex)
     types = numeric_types
 
     if isinstance(item, list):
@@ -188,20 +199,18 @@ def is_numeric_type(item):
 
 
 def is_string_type(item):
-    types = (six.string_types, six.text_type)
     if isinstance(item, list):
-        return all(isinstance(i, types) for i in item)
+        return all(isinstance(i, str) for i in item)
     if isinstance(item, np.ndarray):
         return np.issubdtype(item.dtype, np.str_)
-    return isinstance(item, types)
-    
+    return isinstance(item, str)
+
 
 def cast_list(type, items):
     return [type(item) for item in items]
 
 
 def convert_to_python_value(var):
-    import numbers
     if isinstance(var, numbers.Integral):
         return int(var)
     elif isinstance(var, numbers.Real):
@@ -279,22 +288,22 @@ def check_input_and_output_numbers(operator, input_count_range=None, output_coun
 
     if min_input_count is not None and len(operator.inputs) < min_input_count:
         raise RuntimeError(
-            'For operator %s (type: %s), at least %s input(s) is(are) required but we got %s input(s) which are %s' \
+            'For operator %s (type: %s), at least %s input(s) is(are) required but we got %s input(s) which are %s'
             % (operator.full_name, operator.type, min_input_count, len(operator.inputs), operator.input_full_names))
 
     if max_input_count is not None and len(operator.inputs) > max_input_count:
         raise RuntimeError(
-            'For operator %s (type: %s), at most %s input(s) is(are) supported but we got %s output(s) which are %s' \
+            'For operator %s (type: %s), at most %s input(s) is(are) supported but we got %s output(s) which are %s'
             % (operator.full_name, operator.type, max_input_count, len(operator.inputs), operator.input_full_names))
 
     if min_output_count is not None and len(operator.outputs) < min_output_count:
         raise RuntimeError(
-            'For operator %s (type: %s), at least %s output(s) is(are) produced but we got %s output(s) which are %s' \
+            'For operator %s (type: %s), at least %s output(s) is(are) produced but we got %s output(s) which are %s'
             % (operator.full_name, operator.type, min_output_count, len(operator.outputs), operator.output_full_names))
 
     if max_output_count is not None and len(operator.outputs) > max_output_count:
         raise RuntimeError(
-            'For operator %s (type: %s), at most %s outputs(s) is(are) supported but we got %s output(s) which are %s' \
+            'For operator %s (type: %s), at most %s outputs(s) is(are) supported but we got %s output(s) which are %s'
             % (operator.full_name, operator.type, max_output_count, len(operator.outputs), operator.output_full_names))
 
 
@@ -310,13 +319,13 @@ def check_input_and_output_types(operator, good_input_types=None, good_output_ty
     if good_input_types is not None:
         for variable in operator.inputs:
             if type(variable.type) not in good_input_types:
-                raise RuntimeError('Operator %s (type: %s) got an input %s with a wrong type %s. Only %s are allowed' \
+                raise RuntimeError('Operator %s (type: %s) got an input %s with a wrong type %s. Only %s are allowed'
                                    % (operator.full_name, operator.type, variable.full_name, type(variable.type),
                                       good_input_types))
 
     if good_output_types is not None:
         for variable in operator.outputs:
             if type(variable.type) not in good_output_types:
-                raise RuntimeError('Operator %s (type: %s) got an output %s with a wrong type %s. Only %s are allowed' \
+                raise RuntimeError('Operator %s (type: %s) got an output %s with a wrong type %s. Only %s are allowed'
                                    % (operator.full_name, operator.type, variable.full_name, type(variable.type),
                                       good_output_types))
