@@ -37,7 +37,8 @@ def get_converter(operator_name):
     :return: a conversion function for a specific Operator object
     '''
     if operator_name not in _converter_pool:
-        raise ValueError('Unsupported conversion for operator %s' % operator_name)
+        raise ValueError('Unsupported conversion for operator %r in %s' % (
+            operator_name, ", ".join(sorted(_converter_pool))))
     return _converter_pool[operator_name]
 
 
