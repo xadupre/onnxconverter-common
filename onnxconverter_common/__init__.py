@@ -8,7 +8,7 @@ The entry point to onnxconverter-common.
 This framework performs optimization for ONNX models and
 includes common utilities for ONNX converters.
 """
-__version__ = "1.8.91"
+__version__ = "1.9.91"
 __author__ = "Microsoft"
 __producer__ = "OnnxMLTools"
 __producer_version__ = __version__
@@ -26,5 +26,5 @@ from .tree_ensemble import *  # noqa F403
 from .utils import *  # noqa F403
 from .case_insensitive_dict import *  # noqa F403
 from .metadata_props import add_metadata_props, set_denotation
-from .float16 import convert_tensor_float_to_float16, convert_float_to_float16
+from .float16 import convert_tensor_float_to_float16, convert_float_to_float16, convert_float_to_float16_model_path
 from .optimizer import optimize_onnx, optimize_onnx_graph, optimize_onnx_model
